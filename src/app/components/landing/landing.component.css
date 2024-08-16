@@ -1,0 +1,20 @@
+/* Remove border from table */
+table.mat-table {
+  border: none;
+}
+
+.mat-header-row,
+.mat-row {
+  border-bottom: none;
+}
+
+/* Remove drop shadow */
+.mat-elevation-z8 {
+  box-shadow: none;
+}
+
+.action-icon {
+  /* padding-right: 10px; */
+  /* padding-right: 15px; */
+  cursor: pointer;
+}
