@@ -18,3 +18,10 @@ table.mat-table {
   /* padding-right: 15px; */
   cursor: pointer;
 }
+
+.header {
+  font-size: 1.5rem;
+  padding: 1rem;
+  background-color: black;
+  color: white;
+}

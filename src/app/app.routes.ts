@@ -5,7 +5,7 @@ import { ModalComponent } from './components/modal/modal.component';
 
 export const routes: Routes = [
   {
-    path: 'landing-component',
+    path: '',
     component: LandingComponent,
   },
   {

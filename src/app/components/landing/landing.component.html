@@ -1,12 +1,16 @@
-<div class="container-fluid">
+<div class="container-fluid p-0">
   <div class="row">
     <div class="col-md-12">
       <!-- Top-level content, you can customize this as needed -->
-      <p>University Explorer</p>
+      <p class="header">University Explorer</p>
     </div>
     <div class="col-md-12">
       <div class="row">
-        <div class="col-md-2"><button mat-raised-button>Basic</button></div>
+        <div class="col-md-2 d-flex align-items-start justify-content-center">
+          <button mat-raised-button (click)="addNewCourse()">
+            Add New Course
+          </button>
+        </div>
         <div class="col-md-10">
           <!-- Filter and Table Section -->
           <mat-form-field appearance="fill" class="w-100 mb-4">
@@ -21,7 +25,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-12" *ngIf="isMode">
       <div class="row">
         <table mat-table [dataSource]="dataSource" matSort class="mat-table">
           <ng-container matColumnDef="actions">
@@ -38,6 +42,7 @@
                 data-bs-target="#exampleModal"
                 color="warn"
                 class="action-icon"
+                (click)="delete_rec(row._id)"
                 >delete</mat-icon
               >
             </td>
@@ -111,6 +116,259 @@
         ></mat-paginator>
       </div>
     </div>
+    <div class="col-md-12" *ngIf="!isMode">
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <div class="row d-flex">
+          <!-- Course Name -->
+          <div class="col-md-12">
+            <div class="row">
+              <div
+                class="col-md-4 d-flex justify-content-center align-items-center"
+              >
+                Course Name
+              </div>
+              <div class="col-md-8 d-flex justify-content-start">
+                <mat-form-field class="example-form-field">
+                  <mat-label>Enter Course Name</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="CourseName"
+                    [matAutocomplete]="autoCourseName"
+                  />
+                </mat-form-field>
+                <mat-autocomplete #autoCourseName="matAutocomplete">
+                  <mat-option
+                    *ngFor="let item of auto_data"
+                    [value]="item.CourseName"
+                  >
+                    {{ item.CourseName }}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+            </div>
+          </div>
+
+          <!-- University -->
+          <div class="col-md-12">
+            <div class="row">
+              <div
+                class="col-md-4 d-flex justify-content-center align-items-center"
+              >
+                University
+              </div>
+              <div class="col-md-8 d-flex justify-content-start">
+                <mat-form-field class="example-form-field">
+                  <mat-label>Enter University</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="University"
+                    [matAutocomplete]="autoUniversity"
+                  />
+                </mat-form-field>
+                <mat-autocomplete #autoUniversity="matAutocomplete">
+                  <mat-option
+                    *ngFor="let item of auto_data"
+                    [value]="item.University"
+                  >
+                    {{ item.University }}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+            </div>
+          </div>
+
+          <!-- Country -->
+          <div class="col-md-12">
+            <div class="row">
+              <div
+                class="col-md-4 d-flex justify-content-center align-items-center"
+              >
+                Country
+              </div>
+              <div class="col-md-8 d-flex justify-content-start">
+                <mat-form-field class="example-form-field">
+                  <mat-label>Enter Country</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="Country"
+                    [matAutocomplete]="autoCountry"
+                  />
+                </mat-form-field>
+                <mat-autocomplete #autoCountry="matAutocomplete">
+                  <mat-option
+                    *ngFor="let item of auto_data"
+                    [value]="item.Country"
+                  >
+                    {{ item.Country }}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+            </div>
+          </div>
+
+          <!-- City -->
+          <div class="col-md-12">
+            <div class="row">
+              <div
+                class="col-md-4 d-flex justify-content-center align-items-center"
+              >
+                City
+              </div>
+              <div class="col-md-8 d-flex justify-content-start">
+                <mat-form-field class="example-form-field">
+                  <mat-label>Enter City</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="City"
+                    [matAutocomplete]="autoCity"
+                  />
+                </mat-form-field>
+                <mat-autocomplete #autoCity="matAutocomplete">
+                  <mat-option
+                    *ngFor="let item of auto_data"
+                    [value]="item.City"
+                  >
+                    {{ item.City }}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+            </div>
+          </div>
+
+          <!-- Price -->
+          <div class="col-md-12">
+            <div class="row">
+              <div
+                class="col-md-4 d-flex justify-content-center align-items-center"
+              >
+                Price
+              </div>
+              <div class="col-md-8 d-flex justify-content-start">
+                <mat-form-field class="example-form-field">
+                  <mat-label>Enter Price</mat-label>
+                  <input matInput type="text" formControlName="Price" />
+                </mat-form-field>
+                <mat-form-field class="example-form-field">
+                  <mat-label>Enter Currency</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="Currency"
+                    [matAutocomplete]="autoCurrency"
+                  />
+                  <mat-autocomplete #autoCurrency="matAutocomplete">
+                    <mat-option
+                      *ngFor="let item of auto_data"
+                      [value]="item.Currency"
+                    >
+                      {{ item.Currency }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <!-- Start Date -->
+          <div class="col-md-12">
+            <div class="row">
+              <div
+                class="col-md-4 d-flex justify-content-center align-items-center"
+              >
+                Start Date
+              </div>
+              <div class="col-md-8 d-flex justify-content-start">
+                <mat-form-field>
+                  <mat-label>Choose a date</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="pickerStart"
+                    formControlName="StartDate"
+                  />
+                  <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="pickerStart"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #pickerStart></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <!-- End Date -->
+          <div class="col-md-12">
+            <div class="row">
+              <div
+                class="col-md-4 d-flex justify-content-center align-items-center"
+              >
+                End Date
+              </div>
+              <div class="col-md-8 d-flex justify-content-start">
+                <mat-form-field>
+                  <mat-label>Choose a date</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="pickerEnd"
+                    formControlName="EndDate"
+                  />
+                  <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="pickerEnd"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #pickerEnd></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="col-md-12">
+            <div class="row">
+              <div
+                class="col-md-4 d-flex justify-content-center align-items-center"
+              >
+                Description
+              </div>
+              <div class="col-md-8 d-flex justify-content-start">
+                <mat-form-field class="example-form-field">
+                  <mat-label>Enter Description</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="CourseDescription"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="col-md-12">
+            <div class="row">
+              <div
+                class="col-md-4 d-flex justify-content-center align-items-center"
+              >
+                What do you want to do?
+              </div>
+              <div class="col-md-8 d-flex justify-content-start">
+                <button type="submit" class="btn btn-primary">Confirm</button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="cancelAdd()"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
@@ -134,7 +392,7 @@
         <!-- Place your modal body content here -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           Cancel
         </button>
         <button type="button" class="btn btn-primary">Confirm</button>
