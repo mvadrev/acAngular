@@ -1,3 +1,4 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900italic,900);
 /* Remove border from table */
 table.mat-table {
   border: none;
@@ -24,4 +25,29 @@ table.mat-table {
   padding: 1rem;
   background-color: black;
   color: white;
+}
+
+.btn_ {
+  margin-left: 1.4rem !important;
+}
+
+.save-button {
+  background: #007fff;
+  color: white;
+  height: 55px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.abc {
+  text-align: center;
+}
+
+html {
+  font-family: Roboto;
+}
+
+.muk:hover {
+  cursor: pointer;
 }

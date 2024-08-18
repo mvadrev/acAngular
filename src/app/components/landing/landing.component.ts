@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ViewChild, Component, ElementRef } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -13,6 +13,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 export interface UserData {
   _id: string;
@@ -42,6 +43,7 @@ export interface UserData {
     ReactiveFormsModule,
     MatDatepickerModule,
     MatAutocompleteModule,
+    MatTooltipModule,
   ],
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.css'],
@@ -102,12 +104,27 @@ export class LandingComponent implements AfterViewInit {
     ]),
   });
 
+  courseName: string = '';
+  currency: string = '';
+  university: string = '';
+  country: string = '';
+  city: string = '';
+  price: number = 0;
+  startDate: string = '';
+  endDate: string = '';
+  courseDescription: string = '';
+  showDescription: boolean = false;
+
   constructor(private masterService: MasterService, private router: Router) {
     this.dataSource = new MatTableDataSource<UserData>([]);
     this.loadUserData();
   }
 
-  delete_rec(_id: any) {}
+  //
+  assigner_var: any;
+  assigner_(_id: any) {
+    this.assigner_var = _id;
+  }
 
   cancelAdd() {
     this.isMode = true;
@@ -129,6 +146,11 @@ export class LandingComponent implements AfterViewInit {
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
+  }
+
+  delete_rec(assigner_var: any) {
+    console.log('eelting');
+    this.masterService.deleteCourse(assigner_var);
   }
 
   ngAfterViewInit() {
@@ -197,18 +219,53 @@ export class LandingComponent implements AfterViewInit {
     this.router.navigate(['/update-course', id]);
     console.log('hey');
   }
-  async loadUserData(): Promise<UserData[]> {
-    try {
-      const data = await this.masterService.LoadPage().toPromise(); // Convert Observable to Promise
-      if (Array.isArray(data)) {
-        return data; // Return the data if it's correctly an array
-      } else {
-        console.error('Received data is not an array:', data);
-        return []; // Return an empty array if the data is not in the expected format
-      }
-    } catch (error) {
-      console.error('Error fetching universities:', error);
-      return []; // Return an empty array in case of an error
-    }
+
+  // loadUserData(): void {
+  //   this.masterService.LoadPage().subscribe({
+  //     next: (data: any) => {
+  //       if (Array.isArray(data)) {
+  //         this.auto_data = data;
+  //         console.log('Data loaded successfully:', this.auto_data);
+  //       } else {
+  //         console.error('Received data is not an array:', data);
+  //       }
+  //     },
+  //     error: (error) => {
+  //       console.error('Error fetching universities:', error);
+  //     },
+  //     complete: () => {
+  //       console.info('Data loading complete', this.auto_data.length);
+  //       // var courseId = this.route.snapshot.paramMap.get('id');
+
+  //       this.auto_data = data
+
+  //       // for (let i = 0; i < this.auto_data.length; i++) {
+  //       //   console.log(this.auto_data[i]['_id']);
+
+  //       // }
+
+  //       // Load form here
+  //     },
+  //   });
+  // }
+
+  loadUserData(): void {
+    this.masterService.LoadPage().subscribe({
+      next: (data: any) => {
+        if (Array.isArray(data)) {
+          this.auto_data = data;
+          this.dataSource.data = this.auto_data; // Assign data to dataSource here
+          console.log('Data loaded successfully:', this.auto_data);
+        } else {
+          console.error('Received data is not an array:', data);
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching universities:', error);
+      },
+      complete: () => {
+        console.info('Data loading complete', this.auto_data.length);
+      },
+    });
   }
 }

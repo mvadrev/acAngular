@@ -1,6 +1,10 @@
-<div class="col-md-12" *ngIf="!isMode">
+<div class="container-fluid p-0">
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
     <div class="row d-flex">
+      <div class="col-md-12">
+        <!-- Top-level content, you can customize this as needed -->
+        <p class="header">University Explorer</p>
+      </div>
       <!-- Course Name -->
       <div class="col-md-12">
         <div class="row">
@@ -17,7 +21,7 @@
                 type="text"
                 formControlName="CourseName"
                 [matAutocomplete]="autoCourseName"
-                [value]="this.userForm.value.CourseName"
+                [value]="courseDescription"
               />
             </mat-form-field>
             <mat-autocomplete #autoCourseName="matAutocomplete">
@@ -44,10 +48,11 @@
             <mat-form-field class="example-form-field">
               <mat-label>Enter University</mat-label>
               <input
+                [disabled]="true"
                 matInput
                 type="text"
-                formControlName="University"
                 [matAutocomplete]="autoUniversity"
+                [value]="university"
               />
             </mat-form-field>
             <mat-autocomplete #autoUniversity="matAutocomplete">
@@ -76,8 +81,9 @@
               <input
                 matInput
                 type="text"
-                formControlName="Country"
                 [matAutocomplete]="autoCountry"
+                [value]="country"
+                [disabled]="true"
               />
             </mat-form-field>
             <mat-autocomplete #autoCountry="matAutocomplete">
@@ -103,8 +109,9 @@
               <input
                 matInput
                 type="text"
-                formControlName="City"
                 [matAutocomplete]="autoCity"
+                [value]="city"
+                [disabled]="true"
               />
             </mat-form-field>
             <mat-autocomplete #autoCity="matAutocomplete">
@@ -125,27 +132,40 @@
             Price
           </div>
           <div class="col-md-8 d-flex justify-content-start">
-            <mat-form-field class="example-form-field">
-              <mat-label>Enter Price</mat-label>
-              <input matInput type="text" formControlName="Price" />
-            </mat-form-field>
-            <mat-form-field class="example-form-field">
-              <mat-label>Enter Currency</mat-label>
-              <input
-                matInput
-                type="text"
-                formControlName="Currency"
-                [matAutocomplete]="autoCurrency"
-              />
-              <mat-autocomplete #autoCurrency="matAutocomplete">
-                <mat-option
-                  *ngFor="let item of auto_data"
-                  [value]="item.Currency"
-                >
-                  {{ item.Currency }}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="example-form-field">
+                  <mat-label>Enter Price</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="Price"
+                    [value]="price"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-6">
+                <mat-form-field class="example-form-field">
+                  <mat-label>Enter Currency</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="Currency"
+                    [matAutocomplete]="autoCurrency"
+                    [value]="currency"
+                  />
+                  <mat-autocomplete #autoCurrency="matAutocomplete">
+                    <mat-option
+                      *ngFor="let item of auto_data"
+                      [value]="item.Currency"
+                    >
+                      {{ item.Currency }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -165,6 +185,7 @@
                 matInput
                 [matDatepicker]="pickerStart"
                 formControlName="StartDate"
+                [value]="startDate"
               />
               <mat-datepicker-toggle
                 matIconSuffix
@@ -191,6 +212,7 @@
                 matInput
                 [matDatepicker]="pickerEnd"
                 formControlName="EndDate"
+                [value]="endDate"
               />
               <mat-datepicker-toggle
                 matIconSuffix
@@ -213,7 +235,12 @@
           <div class="col-md-8 d-flex justify-content-start">
             <mat-form-field class="example-form-field">
               <mat-label>Enter Description</mat-label>
-              <input matInput type="text" formControlName="CourseDescription" />
+              <input
+                matInput
+                type="text"
+                formControlName="CourseDescription"
+                [value]="courseDescription"
+              />
             </mat-form-field>
           </div>
         </div>
@@ -228,8 +255,20 @@
             What do you want to do?
           </div>
           <div class="col-md-8 d-flex justify-content-start">
-            <button type="submit" class="btn btn-primary">Confirm</button>
-            <button type="button" class="btn btn-secondary">Cancel</button>
+            <div class="row">
+              <div class="col-md-6">
+                <button type="submit" class="btn btn-primary">Confirm</button>
+              </div>
+              <div class="col-md-6">
+                <button
+                  type="button"
+                  class="btn btn-secondary btn_"
+                  (click)="goback()"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

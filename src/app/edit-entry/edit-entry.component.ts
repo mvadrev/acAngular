@@ -18,7 +18,7 @@ import { MasterService } from '../services/master.service';
 export interface UserData {
   _id: string;
   CourseName: string;
-  // University: string;
+  University: string;
   City: string;
   Country: string;
   CourseDescription: string;
@@ -50,64 +50,107 @@ export interface UserData {
 export class EditEntryComponent implements OnInit {
   public courseId: string | null = null;
 
-  auto_data: any;
-  auto_city: any;
-  isMode: boolean = false;
+  courseName: string = '';
+  currency: string = '';
+  university: string = '';
+  country: string = '';
+  city: string = '';
+  price: number = 0;
+  startDate: string = '';
+  endDate: string = '';
+  courseDescription: string = '';
+
+  auto_data: UserData[] = [];
 
   onSubmit(): void {
-    console.log(this.userForm.errors);
-    const startDateValue: string | null | undefined =
-      this.userForm.value.StartDate;
-    const endDateValue: string | null | undefined = this.userForm.value.EndDate;
-
-    if (startDateValue) {
-      const formattedStartDate = this.formatDate(new Date(startDateValue));
-      console.log('Formatted Start Date:', formattedStartDate);
-      this.userForm.patchValue({ StartDate: formattedStartDate });
-    } else {
-      console.error('Start Date is not defined.');
-    }
-
-    if (endDateValue) {
-      const formattedEndDate = this.formatDate(new Date(endDateValue));
-      console.log('Formatted End Date:', formattedEndDate);
-      this.userForm.patchValue({ EndDate: formattedEndDate });
-    } else {
-      console.error('End Date is not defined.');
-    }
+    console.log('lllllllll', this.userForm.errors);
 
     if (this.userForm.errors == null) {
-      console.log('Form is valid:', this.userForm.value);
-      // Add logic to save or update the course
-      this.masterService.postCourse(this.userForm.value).subscribe(
-        (response) => {
-          console.log('Course saved successfully:', response);
-          this.isMode = true;
-          // You can add more logic here, like resetting the form or redirecting
-        },
-        (error) => {
-          console.error('Error saving course:', error);
-          // Handle the error here, such as showing a message to the user
-        }
-      );
-    } else {
-      console.log('Form is invalid:', this.userForm.value);
+      console.log('Valid form');
+
+      // this.masterService.
     }
+    // const startDateValue: string | null | undefined =
+    //   this.userForm.value.StartDate;
+    // const endDateValue: string | null | undefined = this.userForm.value.EndDate;
+
+    // if (startDateValue) {
+    //   const formattedStartDate = this.formatDate(new Date(startDateValue));
+    //   console.log('Formatted Start Date:', formattedStartDate);
+    //   this.userForm.patchValue({ StartDate: formattedStartDate });
+    // } else {
+    //   console.error('Start Date is not defined.');
+    // }
+
+    // if (endDateValue) {
+    //   const formattedEndDate = this.formatDate(new Date(endDateValue));
+    //   console.log('Formatted End Date:', formattedEndDate);
+    //   this.userForm.patchValue({ EndDate: formattedEndDate });
+    // } else {
+    //   console.error('End Date is not defined.');
+    // }
+
+    // if (this.userForm.errors == null) {
+    //   console.log('Form is valid:', this.userForm.value);
+    //   // Add logic to save or update the course
+    //   this.masterService.postCourse(this.userForm.value).subscribe(
+    //     (response) => {
+    //       console.log('Course saved successfully:', response);
+    //       // You can add more logic here, like resetting the form or redirecting
+    //     },
+    //     (error) => {
+    //       console.error('Error saving course:', error);
+    //       // Handle the error here, such as showing a message to the user
+    //     }
+    //   );
+    // } else {
+    //   console.log('Form is invalid:', this.userForm.value);
+    // }
   }
 
-  async loadUserData(): Promise<UserData[]> {
-    try {
-      const data = await this.masterService.LoadPage().toPromise(); // Convert Observable to Promise
-      if (Array.isArray(data)) {
-        return data; // Return the data if it's correctly an array
-      } else {
-        console.error('Received data is not an array:', data);
-        return []; // Return an empty array if the data is not in the expected format
-      }
-    } catch (error) {
-      console.error('Error fetching universities:', error);
-      return []; // Return an empty array in case of an error
-    }
+  loadUserData(): void {
+    this.masterService.LoadPage().subscribe({
+      next: (data: any) => {
+        if (Array.isArray(data)) {
+          this.auto_data = data;
+          console.log('Data loaded successfully:', this.auto_data);
+        } else {
+          console.error('Received data is not an array:', data);
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching universities:', error);
+      },
+      complete: () => {
+        console.info('Data loading complete', this.auto_data.length);
+        var courseId = this.route.snapshot.paramMap.get('id');
+
+        for (let i = 0; i < this.auto_data.length; i++) {
+          console.log(this.auto_data[i]['_id'], courseId);
+
+          if (this.auto_data[i]['_id'] == courseId) {
+            console.log('Yaas', this.auto_data[i]['University']);
+            this.university = this.auto_data[i]['University'];
+            this.city = this.auto_data[i]['City'];
+            this.country = this.auto_data[i]['Country'];
+            this.courseDescription = this.auto_data[i]['CourseName'];
+            this.price = this.auto_data[i]['Price'];
+            this.currency = this.auto_data[i]['Currency'];
+            this.startDate = this.auto_data[i]['StartDate'];
+            this.endDate = this.auto_data[i]['EndDate'];
+            this.courseDescription = this.auto_data[i]['CourseDescription'];
+          } else {
+            console.log('Not found');
+          }
+        }
+
+        // Load form here
+      },
+    });
+  }
+
+  goback() {
+    this.router.navigate(['/']);
   }
 
   searchRecordById(id: string): any | undefined {
@@ -165,7 +208,9 @@ export class EditEntryComponent implements OnInit {
     private route: ActivatedRoute,
     private masterService: MasterService,
     private router: Router
-  ) {}
+  ) {
+    this.loadUserData();
+  }
 
   ngOnInit(): void {
     // Get the 'id' parameter from the route
@@ -173,5 +218,7 @@ export class EditEntryComponent implements OnInit {
     console.log('Course ID:', this.courseId);
 
     // this.searchRecordById(this.courseId)
+
+    console.log('Obtained data is', this.auto_data);
   }
 }
