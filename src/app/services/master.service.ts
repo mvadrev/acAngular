@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { interval, take, lastValueFrom } from 'rxjs';
@@ -26,9 +26,18 @@ export class MasterService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.post(`http://127.0.0.1:8000/update_course`, data, {
+    return this.http.post(`http://127.0.0.1:8000/update-course`, data, {
       headers,
     });
+  }
+
+  // Paaginated version
+  getPaginatedAllCourses(page: number, limit: number): Observable<any[]> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+    const apiUrl = 'http://localhost:8000/get_all_courses_new/';
+    return this.http.post<any[]>(apiUrl, {}, { params });
   }
 
   deleteCourse(courseId: string): Promise<any> {

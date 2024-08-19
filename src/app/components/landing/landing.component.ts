@@ -14,6 +14,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Modal } from 'bootstrap'; //
 
 export interface UserData {
   _id: string;
@@ -149,15 +150,41 @@ export class LandingComponent implements AfterViewInit {
   }
 
   delete_rec(assigner_var: any) {
-    console.log('eelting');
-    this.masterService.deleteCourse(assigner_var);
+    console.log('Deleting course with ID:', assigner_var);
+
+    this.masterService
+      .deleteCourse(assigner_var)
+      .then((response) => {
+        console.log('Course deleted successfully:', response);
+
+        // Simulate a click on the close button to close the modal
+        const closeButton = document.querySelector(
+          'button.btn-muk'
+        ) as HTMLButtonElement;
+        if (closeButton) {
+          closeButton.click(); // Programmatically click the close button
+        } else {
+          console.error('Close button not found!');
+        }
+
+        // Reload the data after closing the modal
+        this.loadUserData();
+      })
+      .catch((error) => {
+        console.error('Error deleting course:', error);
+      });
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    // Initialize the form with controls and validators
+    // Listen to paginator changes
+    this.paginator.page.subscribe(() => {
+      const pageIndex = this.paginator.pageIndex + 1; // MatPaginator is 0-based, your API might be 1-based
+      const pageSize = this.paginator.pageSize;
+      this.loadUserData(pageIndex, pageSize); // Fetch data for the current page
+    });
   }
 
   onSubmit(): void {
@@ -249,22 +276,21 @@ export class LandingComponent implements AfterViewInit {
   //   });
   // }
 
-  loadUserData(): void {
-    this.masterService.LoadPage().subscribe({
+  loadUserData(page: number = 1, limit: number = 10): void {
+    this.masterService.getPaginatedAllCourses(page, limit).subscribe({
       next: (data: any) => {
         if (Array.isArray(data)) {
-          this.auto_data = data;
-          this.dataSource.data = this.auto_data; // Assign data to dataSource here
-          console.log('Data loaded successfully:', this.auto_data);
+          this.dataSource.data = data; // Assign data to the dataSource
+          console.log('Data loaded successfully:', data);
         } else {
           console.error('Received data is not an array:', data);
         }
       },
       error: (error) => {
-        console.error('Error fetching universities:', error);
+        console.error('Error fetching courses:', error);
       },
       complete: () => {
-        console.info('Data loading complete', this.auto_data.length);
+        console.info('Data loading complete');
       },
     });
   }

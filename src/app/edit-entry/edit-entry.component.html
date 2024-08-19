@@ -1,12 +1,21 @@
 <div class="container-fluid p-0">
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
     <div class="row d-flex">
-      <div class="col-md-12">
+      <div class="col-md-12 header">
+        <div class="row d-flex justify-content-left">
+          <div
+            class="col-md-1 d-flex justify-content-center align-items-center P-0"
+          >
+            <mat-icon>search</mat-icon>
+          </div>
+          <div class="col-md-11 d-flex justify-content-left">
+            <- University Explorer
+          </div>
+        </div>
         <!-- Top-level content, you can customize this as needed -->
-        <p class="header">University Explorer</p>
       </div>
       <!-- Course Name -->
-      <div class="col-md-12">
+      <div class="col-md-12 mt-3">
         <div class="row">
           <div
             class="col-md-4 d-flex justify-content-center align-items-center"
@@ -21,7 +30,7 @@
                 type="text"
                 formControlName="CourseName"
                 [matAutocomplete]="autoCourseName"
-                [value]="courseDescription"
+                [value]="courseName"
               />
             </mat-form-field>
             <mat-autocomplete #autoCourseName="matAutocomplete">

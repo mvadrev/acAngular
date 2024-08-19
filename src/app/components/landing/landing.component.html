@@ -433,7 +433,7 @@
   aria-labelledby="exampleModalLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog" role="document" id="exampleModal">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">
@@ -445,7 +445,11 @@
       </div>
       <div class="modal-footer">
         <div class="col-md-12"></div>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button
+          type="button"
+          class="btn btn-secondary btn-muk"
+          data-bs-dismiss="modal"
+        >
           Cancel
         </button>
         <button
@@ -453,6 +457,7 @@
           class="btn btn-primary"
           value="assigner"
           (click)="delete_rec(assigner_var)"
+          data-dismiss="modal"
         >
           Confirm
         </button>

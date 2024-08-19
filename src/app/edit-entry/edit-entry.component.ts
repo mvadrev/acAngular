@@ -63,49 +63,41 @@ export class EditEntryComponent implements OnInit {
   auto_data: UserData[] = [];
 
   onSubmit(): void {
-    console.log('lllllllll', this.userForm.errors);
+    console.log('Form validation errors:', this.userForm.errors);
 
-    if (this.userForm.errors == null) {
-      console.log('Valid form');
+    if (this.userForm.invalid) {
+      console.log('Valid form, preparing data for update');
 
-      // this.masterService.
+      // Combine old values with new form values
+      const updatedCourseData = {
+        _id: this.courseId, // Ensure the ID is included
+        CourseName: this.userForm.value.CourseName || this.courseName,
+        Currency: this.userForm.value.Currency || this.currency,
+        University: this.userForm.value.University || this.university,
+        Country: this.userForm.value.Country || this.country,
+        City: this.userForm.value.City || this.city,
+        Price: this.userForm.value.Price || this.price,
+        StartDate: this.userForm.value.StartDate || this.startDate,
+        EndDate: this.userForm.value.EndDate || this.endDate,
+        CourseDescription:
+          this.userForm.value.CourseDescription || this.courseDescription,
+      };
+
+      console.log('Updated course data:', updatedCourseData);
+
+      // Call the updateCourse API with the merged data
+      this.masterService.updateCourse(updatedCourseData).subscribe(
+        (response) => {
+          console.log('Course updated successfully:', response);
+          this.router.navigate(['/']); // Redirect after successful update
+        },
+        (error) => {
+          console.error('Error updating course:', error);
+        }
+      );
+    } else {
+      console.log('Form is invalid. Please correct the errors and try again.');
     }
-    // const startDateValue: string | null | undefined =
-    //   this.userForm.value.StartDate;
-    // const endDateValue: string | null | undefined = this.userForm.value.EndDate;
-
-    // if (startDateValue) {
-    //   const formattedStartDate = this.formatDate(new Date(startDateValue));
-    //   console.log('Formatted Start Date:', formattedStartDate);
-    //   this.userForm.patchValue({ StartDate: formattedStartDate });
-    // } else {
-    //   console.error('Start Date is not defined.');
-    // }
-
-    // if (endDateValue) {
-    //   const formattedEndDate = this.formatDate(new Date(endDateValue));
-    //   console.log('Formatted End Date:', formattedEndDate);
-    //   this.userForm.patchValue({ EndDate: formattedEndDate });
-    // } else {
-    //   console.error('End Date is not defined.');
-    // }
-
-    // if (this.userForm.errors == null) {
-    //   console.log('Form is valid:', this.userForm.value);
-    //   // Add logic to save or update the course
-    //   this.masterService.postCourse(this.userForm.value).subscribe(
-    //     (response) => {
-    //       console.log('Course saved successfully:', response);
-    //       // You can add more logic here, like resetting the form or redirecting
-    //     },
-    //     (error) => {
-    //       console.error('Error saving course:', error);
-    //       // Handle the error here, such as showing a message to the user
-    //     }
-    //   );
-    // } else {
-    //   console.log('Form is invalid:', this.userForm.value);
-    // }
   }
 
   loadUserData(): void {
@@ -130,6 +122,7 @@ export class EditEntryComponent implements OnInit {
 
           if (this.auto_data[i]['_id'] == courseId) {
             console.log('Yaas', this.auto_data[i]['University']);
+            this.courseName = this.auto_data[i]['CourseName'];
             this.university = this.auto_data[i]['University'];
             this.city = this.auto_data[i]['City'];
             this.country = this.auto_data[i]['Country'];
