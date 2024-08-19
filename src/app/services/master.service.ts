@@ -9,7 +9,7 @@ import { interval, take, lastValueFrom } from 'rxjs';
 export class MasterService {
   constructor(private http: HttpClient) {}
 
-  LoadPage() {
+  LoadPage(): Observable<any> {
     return this.http.get('http://127.0.0.1:8000/get_all_courses');
   }
 

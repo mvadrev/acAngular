@@ -216,6 +216,15 @@ export class LandingComponent implements AfterViewInit {
         (response) => {
           console.log('Course saved successfully:', response);
           this.isMode = true;
+          this.masterService.LoadPage().subscribe(
+            (data: UserData[]) => {
+              this.dataSource.data = data; // Assign the result to the dataSource
+            },
+            (error) => {
+              console.error('Error loading data:', error);
+            }
+          );
+          // this.dataSource.data = data;
           // You can add more logic here, like resetting the form or redirecting
         },
         (error) => {
@@ -246,35 +255,6 @@ export class LandingComponent implements AfterViewInit {
     this.router.navigate(['/update-course', id]);
     console.log('hey');
   }
-
-  // loadUserData(): void {
-  //   this.masterService.LoadPage().subscribe({
-  //     next: (data: any) => {
-  //       if (Array.isArray(data)) {
-  //         this.auto_data = data;
-  //         console.log('Data loaded successfully:', this.auto_data);
-  //       } else {
-  //         console.error('Received data is not an array:', data);
-  //       }
-  //     },
-  //     error: (error) => {
-  //       console.error('Error fetching universities:', error);
-  //     },
-  //     complete: () => {
-  //       console.info('Data loading complete', this.auto_data.length);
-  //       // var courseId = this.route.snapshot.paramMap.get('id');
-
-  //       this.auto_data = data
-
-  //       // for (let i = 0; i < this.auto_data.length; i++) {
-  //       //   console.log(this.auto_data[i]['_id']);
-
-  //       // }
-
-  //       // Load form here
-  //     },
-  //   });
-  // }
 
   loadUserData(page: number = 1, limit: number = 10): void {
     this.masterService.getPaginatedAllCourses(page, limit).subscribe({
